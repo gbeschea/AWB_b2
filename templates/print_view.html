@@ -1,0 +1,79 @@
+{% extends "_layout.html" %}
+{% block title %}Print Hub - AWB Hub{% endblock %}
+
+{% block content %}
+    <hgroup>
+        <h1>🖨️ Print Hub</h1>
+        <p>Selectează loturile pe care dorești să le printezi pentru fiecare categorie de magazin.</p>
+    </hgroup>
+    
+    <article>
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h4>Total Neprintate: <mark>{{ total_unprinted }}</mark> comenzi</h4>
+        </div>
+        
+        <form action="{{ url_for('process_and_print_selected_batches') }}" method="post" id="printForm">
+            <input type="hidden" name="category_id" id="hidden_category_id">
+            <input type="hidden" name="batch_numbers" id="hidden_batch_numbers">
+            
+            <div class="accordion">
+            {% for category in categories %}
+            <details class="card">
+                <summary>
+                    <div class="summary-content">
+                        <span class="chevron">▶</span>
+                        <span>{{ category.name }}</span>
+                    </div>
+                    <small>{{ category.unprinted_count }} comenzi</small>
+                </summary>
+                <div class="details-content">
+                    {% if category.unprinted_count > 0 %}
+                    <h6>Selectează Loturile ({{ category.total_batches }} loturi disponibile):</h6>
+                    <div class="batch-buttons" id="batches-for-{{ category.id }}">
+                        {% for i in range(1, category.total_batches + 1) %}
+                        <button type="button" class="batch-btn" data-batch-number="{{ i }}">Lot {{ i }}</button>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="print-category-btn" data-category-id="{{ category.id }}" style="margin-top: 1.5rem;">Printează Loturile Selectate</button>
+                    {% else %}
+                    <p>Nu există comenzi neprintate în această categorie.</p>
+                    {% endif %}
+                </div>
+            </details>
+            {% endfor %}
+            </div>
+        </form>
+    </article>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Logică pentru selecția/deselecția butoanelor de loturi
+    document.querySelectorAll('.batch-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            this.classList.toggle('selected');
+        });
+    });
+
+    // Logică pentru trimiterea formularului la printare
+    document.querySelectorAll('.print-category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const categoryId = this.dataset.categoryId;
+            const batchContainer = document.getElementById(`batches-for-${categoryId}`);
+            const selectedBatches = batchContainer.querySelectorAll('.batch-btn.selected');
+            
+            const batchNumbers = Array.from(selectedBatches).map(btn => btn.dataset.batchNumber);
+
+            if (batchNumbers.length > 0) {
+                document.getElementById('hidden_category_id').value = categoryId;
+                document.getElementById('hidden_batch_numbers').value = batchNumbers.join(',');
+                document.getElementById('printForm').submit();
+            } else {
+                alert('Te rog selectează cel puțin un lot.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

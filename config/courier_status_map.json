@@ -1,0 +1,85 @@
+{
+  "processed": [
+    "Procesată",
+    [
+      "Shipment data received",
+      "Expedierea a fost înregistrată.",
+      "AWB issued",
+      "Parcel registered at sender"
+    ]
+  ],
+  "shipped": [
+    "Expediată",
+    [
+      "Collected from sender",
+      "In DPD warehouse",
+      "Received in DPD warehouse",
+      "Preluat de la expeditor",
+      "Expedierea a fost preluata de catre curier",
+      "In procesare",
+      "Received in Office",
+      "Courier Pick-up"
+    ]
+  ],
+  "in_transit": [
+    "În curs de livrare",
+    [
+      "In transit",
+      "Out for delivery",
+      "In tranzit",
+      "In curs de livrare",
+      "Departure Scan",
+      "Arrival Scan",
+      "Redirected",
+      "Returned to Office",
+      "Coletul a fost încărcat în punctul de livrare."
+    ]
+  ],
+  "pickup_office": [
+    "Pick-up office",
+    [
+      "Redirected to new address or DPD ParcelShop",
+      "In locker",
+      "La sediu",
+      "Prepared for Self-collecting Consignee"
+    ]
+  ],
+  "delivered": [
+    "Livrată",
+    [
+      "Delivered",
+      "Livrat",
+      "Coletul a fost ridicat.",
+      "Rambursul a fost transferat.",
+      "Coletul a fost livrat cu succes."
+    ]
+  ],
+  "refused": [
+    "Refuzată",
+    [
+      "Refused by recipient",
+      "Return to sender",
+      "Refuzat de catre destinatar",
+      "Retur",
+      "Delivered Back to Sender",
+      "Returned",
+      "Ți-am returnat coletul cu succes."
+    ]
+  ],
+  "canceled": [
+    "Anulată",
+    [
+      "Canceled",
+      "Anulat",
+      "Expedierea a fost anulată."
+    ]
+  ],
+  "delivery_issues": [
+    "Probleme la livrare",
+    [
+      "Delivery attempted",
+      "Contact DPD",
+      "Exceptie"
+    ]
+  ]
+}

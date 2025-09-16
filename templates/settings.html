@@ -1,0 +1,33 @@
+{% extends "_layout.html" %}
+{% block title %}Setări - AWB Hub{% endblock %}
+
+{% block content %}
+    <h1 style="margin-bottom: 2rem;">⚙️ Setări Generale</h1>
+    <p>Alege o secțiune pentru a o configura.</p>
+
+    <div class="grid">
+        <article>
+            <hgroup>
+                <h2>🏬 Magazine</h2>
+                <p>Adaugă, editează sau dezactivează magazinele Shopify conectate.</p>
+            </hgroup>
+            <a href="{{ url_for('get_stores_page') }}" role="button">Gestionează Magazinele</a>
+        </article>
+        
+        <article>
+            <hgroup>
+                <h2>🚚 Conturi Curieri</h2>
+                <p>Configurează conturile de curieri, credențialele și link-urile de tracking.</p>
+            </hgroup>
+            <a href="{{ url_for('get_couriers_page') }}" role="button">Gestionează Curierii</a>
+        </article>
+
+        <article>
+            <hgroup>
+                <h2>📇 Categorii Magazine</h2>
+                <p>Grupează magazinele în categorii pentru o mai bună organizare.</p>
+            </hgroup>
+            <a href="{{ url_for('get_categories_page') }}" role="button">Gestionează Categoriile</a>
+        </article>
+        </div>
+{% endblock %}

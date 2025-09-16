@@ -1,0 +1,1361 @@
+/* static/css/style.css */
+:root {
+    --pico-font-size: 15px;
+    --pico-background-color: #f8f9fa;
+    --pico-card-background-color: #ffffff;
+    --pico-card-border-color: #e1e4e8;
+    --pico-primary: #8a43ad;
+    --pico-primary-hover: #733890;
+    --pico-primary-focus: rgba(138, 67, 173, 0.25);
+    --pico-primary-inverse: #fff;
+}
+body { padding: 0; color: #24292e; }
+main.container { max-width: 1800px; padding: 2rem; }
+article {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(27, 31, 35, 0.08);
+    border: 1px solid var(--pico-card-border-color);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+nav.container-fluid {
+    box-shadow: 0 2px 4px rgba(27,31,35,0.06);
+    border-bottom: 1px solid var(--pico-card-border-color);
+    padding: 0.75rem 2rem;
+}
+details.card {
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(27, 31, 35, 0.05);
+    background-color: var(--pico-card-background-color);
+}
+details.card > summary {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 1.5rem; font-weight: bold; list-style: none; cursor: pointer;
+}
+details.card > summary::-webkit-details-marker { display: none; }
+details.card > summary:focus { outline: none; box-shadow: none; }
+details.card[open] > summary { border-bottom: 1px solid var(--pico-card-border-color); }
+.details-content { padding: 1.5rem; }
+.chevron { transition: transform 0.2s ease-in-out; color: var(--pico-color-gray-400); }
+details[open] > summary .chevron { transform: rotate(90deg); }
+.summary-content { display: flex; align-items: center; gap: 0.5rem; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; }
+.main-table-wrapper { overflow-x: auto; }
+.main-table th { white-space: nowrap; position: sticky; top: 0; background: var(--pico-background-color); }
+.main-table td { font-size: 0.95em; }
+.logs-table .toggle-details-btn { font-weight: normal; padding: 5px 15px; }
+.logs-table .arrow { transition: transform 0.2s ease-in-out; }
+.logs-table .arrow.open { transform: rotate(90deg); }
+.log-details-row .details-panel { background-color: #f1f3f5; padding: 2rem; border-top: 1px solid #d1d5da; }
+.log-details-row .details-section { background: var(--pico-card-background-color); padding: 1.5rem; border-radius: 6px; border: 1px solid var(--pico-card-border-color); }
+.log-details-row .details-table-wrapper { overflow-y: auto; max-height: 300px; }
+.log-details-row .details-table th { position: sticky; top: 0; background: #f8f9fa; }
+
+:root {
+    --pico-font-size: 15px;
+    --pico-background-color: #f8f9fa;
+    --pico-card-background-color: #ffffff;
+    --pico-card-border-color: #e1e4e8;
+    --pico-primary: #8a43ad;
+    --pico-primary-hover: #733890;
+    --pico-primary-focus: rgba(138, 67, 173, 0.25);
+    --pico-primary-inverse: #fff;
+}
+body { padding: 0; color: #24292e; }
+main.container { max-width: 1800px; padding: 2rem; }
+article {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(27, 31, 35, 0.08);
+    border: 1px solid var(--pico-card-border-color);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+nav.container-fluid {
+    box-shadow: 0 2px 4px rgba(27,31,35,0.06);
+    border-bottom: 1px solid var(--pico-card-border-color);
+    padding: 0.75rem 2rem;
+}
+/* NOU: Stil pentru hover pe rândurile tabelului */
+.main-table tbody tr:hover {
+    background-color: var(--pico-muted-background-color);
+}
+/* NOU: Stiluri pentru butoanele de loturi din Print Hub */
+.batch-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.batch-buttons .batch-btn {
+    background-color: var(--pico-contrast-background);
+    color: var(--pico-contrast);
+    border: 1px solid var(--pico-contrast-border);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+.batch-buttons .batch-btn.selected {
+    background-color: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+    border-color: var(--pico-primary);
+}
+
+/* ... stilurile existente ... */
+/* FIX: Stil pentru link-urile din header-ul tabelului */
+.main-table thead th a {
+    color: inherit;
+    text-decoration: none;
+}
+.main-table thead th a:hover {
+    color: var(--pico-primary);
+}
+/* FIX: Stil îmbunătățit pentru butoanele de loturi */
+.batch-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.batch-btn {
+    background-color: var(--pico-contrast-background); color: var(--pico-contrast);
+    border: 1px solid var(--pico-contrast-border); padding: 5px 15px;
+    border-radius: 20px; font-size: 0.9em; cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+.batch-btn.selected {
+    background-color: var(--pico-primary); color: var(--pico-primary-inverse);
+    border-color: var(--pico-primary);
+}
+
+/* NOU: Stil pentru un meniu dropdown de coloane, elegant */
+.column-manager-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Două coloane */
+    gap: 0.25rem 1.5rem;
+    padding: 0.75rem;
+    background-color: var(--pico-card-background-color);
+}
+.column-manager-grid li {
+    list-style-type: none;
+    padding: 0.25rem 0;
+}
+.column-manager-grid label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+/* static/css/style.css */
+
+/* ... (stilurile existente) ... */
+
+/* Stil îmbunătățit pentru butoanele de loturi */
+.batch-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.batch-btn {
+    /* Stiluri de bază, un gri deschis pentru stare neselectată */
+    background-color: var(--pico-background-color);
+    color: var(--pico-color-gray-700); /* Text gri închis */
+    border: 1px solid var(--pico-card-border-color);
+    padding: 8px 16px; /* Mărim puțin padding-ul */
+    border-radius: 6px; /* Colțuri ușor mai puțin rotunde */
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Tranziție mai fluidă */
+}
+
+.batch-btn:hover {
+    background-color: var(--pico-muted-background-color); /* Un pic mai închis la hover */
+    border-color: var(--pico-primary); /* Bordura primară la hover */
+}
+
+.batch-btn.selected {
+    /* Stiluri pentru starea selectată */
+    background-color: var(--pico-primary); /* Culoarea primară */
+    color: var(--pico-primary-inverse); /* Text alb */
+    border-color: var(--pico-primary); /* Bordura primară */
+    box-shadow: 0 2px 5px rgba(138, 67, 173, 0.2); /* O umbră subtilă */
+}
+
+/* static/css/style.css */
+
+:root {
+    --pico-font-size: 15px;
+    --pico-background-color: #f8f9fa;
+    --pico-card-background-color: #ffffff;
+    --pico-card-border-color: #e1e4e8;
+    --pico-primary: #8a43ad;
+    --pico-primary-hover: #733890;
+    --pico-primary-focus: rgba(138, 67, 173, 0.25);
+    --pico-primary-inverse: #fff;
+}
+body { padding: 0; color: #24292e; }
+main.container { max-width: 1800px; padding: 2rem; }
+article {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(27, 31, 35, 0.08);
+    border: 1px solid var(--pico-card-border-color);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+nav.container-fluid {
+    box-shadow: 0 2px 4px rgba(27,31,35,0.06);
+    border-bottom: 1px solid var(--pico-card-border-color);
+    padding: 0.75rem 2rem;
+}
+details.card {
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(27, 31, 35, 0.05);
+    background-color: var(--pico-card-background-color);
+}
+details.card > summary {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 1.5rem; font-weight: bold; list-style: none; cursor: pointer;
+}
+details.card > summary::-webkit-details-marker { display: none; }
+details.card > summary:focus { outline: none; box-shadow: none; }
+details.card[open] > summary { border-bottom: 1px solid var(--pico-card-border-color); }
+.details-content { padding: 1.5rem; }
+.chevron { transition: transform 0.2s ease-in-out; color: var(--pico-color-gray-400); }
+details[open] > summary .chevron { transform: rotate(90deg); }
+.summary-content { display: flex; align-items: center; gap: 0.5rem; }
+
+/* Tabelul principal și Managerul de Coloane */
+.table-controls { display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; }
+.main-table-wrapper { overflow-x: auto; }
+.main-table th { white-space: nowrap; position: sticky; top: 0; background: var(--pico-background-color); }
+.main-table td { font-size: 0.95em; }
+.main-table thead th a { color: inherit; text-decoration: none; }
+.main-table thead th a:hover { color: var(--pico-primary); }
+.main-table tbody tr:hover { background-color: var(--pico-muted-background-color); }
+.column-manager-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 0.25rem 1.5rem; padding: 0.75rem;
+    background-color: var(--pico-card-background-color);
+}
+.column-manager-grid li { list-style-type: none; padding: 0.25rem 0; }
+.column-manager-grid label { margin-bottom: 0; font-weight: normal; }
+
+
+/* --- MODIFICARE AICI: Selectori mai specifici pentru butoanele de loturi --- */
+.batch-buttons {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;
+}
+/* Starea neselectată */
+.accordion .batch-btn:not(.selected) {
+    background-color: var(--pico-background-color);
+    color: var(--pico-secondary-hover);
+    border: 1px solid var(--pico-card-border-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+/* Starea la hover */
+.accordion .batch-btn:not(.selected):hover {
+    background-color: var(--pico-muted-background-color);
+    border-color: var(--pico-primary);
+}
+/* Starea selectată */
+.accordion .batch-btn.selected {
+    background-color: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+    border-color: var(--pico-primary);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(138, 67, 173, 0.2);
+    transition: all 0.2s ease-in-out;
+}
+/* --- SFÂRȘIT MODIFICARE --- */
+
+/* Stiluri pentru pagina de log-uri */
+.logs-table .toggle-details-btn { font-weight: normal; padding: 5px 15px; }
+.logs-table .arrow { transition: transform 0.2s ease-in-out; }
+.logs-table .arrow.open { transform: rotate(90deg); }
+.log-details-row .details-panel { background-color: #f1f3f5; padding: 2rem; border-top: 1px solid #d1d5da; }
+.log-details-row .details-section { background: var(--pico-card-background-color); padding: 1.5rem; border-radius: 6px; border: 1px solid var(--pico-card-border-color); }
+.log-details-row .details-table-wrapper { overflow-y: auto; max-height: 300px; }
+.log-details-row .details-table th { position: sticky; top: 0; background: #f8f9fa; }
+
+/* static/css/style.css */
+
+/* --- MODIFICARE AICI: Înlocuiește vechea secțiune de stilizare pentru butoane --- */
+
+/* Stiluri pentru butoanele de loturi din Print Hub */
+.batch-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Starea neselectată (INIȚIALĂ) - fundal alb, text și chenar mov */
+.accordion .batch-btn:not(.selected) {
+    background-color: var(--pico-card-background-color); /* Fundal alb */
+    color: var(--pico-primary); /* Text mov */
+    border: 1px solid var(--pico-primary); /* Chenar mov */
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Starea la hover - se colorează subtil */
+.accordion .batch-btn:not(.selected):hover {
+    background-color: rgba(138, 67, 173, 0.1); /* Un fundal mov foarte deschis */
+}
+
+/* Starea selectată - fundal plin, text alb */
+.accordion .batch-btn.selected {
+    background-color: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+    border-color: var(--pico-primary);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(138, 67, 173, 0.2);
+    transition: all 0.2s ease-in-out;
+}
+/* --- SFÂRȘIT MODIFICARE --- */
+
+/* static/css/style.css (adăaugă la finalul fișierului) */
+
+/* Stil pentru managerul de coloane (Modal) */
+#modal-column-manager .modal-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Trei coloane */
+    gap: 0.5rem 1.5rem;
+}
+#modal-column-manager label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+/* Stil pentru tabelele din paginile de setări */
+.settings-table td {
+    vertical-align: top;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.settings-table fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.settings-table label {
+    margin-bottom: 0.5rem;
+}
+
+.log-details-row .details-table th {
+    position: sticky;
+    top: 0;
+    background: #f8f9fa;
+    /* **CORECTIE**: Adaugă z-index pentru a aduce header-ul deasupra conținutului */
+    z-index: 1; 
+}
+
+/* static/css/style.css */
+
+/* --- General Table Styling --- */
+.main-table-wrapper {
+    overflow-x: auto;
+}
+
+.main-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* **MODIFICARE**: Reduce padding-ul pentru un tabel mai compact */
+    font-size: 0.85em; /* Font mai mic */
+}
+
+.main-table th, .main-table td {
+    padding: 0.5rem 0.8rem; /* Padding redus */
+    border-bottom: 1px solid var(--pico-color-gray-200);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.main-table th {
+    background-color: var(--pico-color-gray-100);
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Asigură-te că este deasupra conținutului la scroll */
+    font-weight: 600;
+}
+
+/* **MODIFICARE**: Stil pentru hover pe rânduri */
+.main-table tbody tr:hover {
+    background-color: var(--pico-color-gray-50); /* O culoare subtilă la hover */
+}
+
+
+/* --- Status Badges (Inspired by Shopify) --- */
+.status-badge {
+    display: inline-flex; /* Pentru aliniere centrală și iconițe opționale */
+    align-items: center;
+    justify-content: center;
+    padding: 0.3em 0.6em;
+    border-radius: var(--pico-border-radius); /* Colțuri rotunjite */
+    font-weight: 600;
+    font-size: 0.8em; /* Mărimă mai mică */
+    line-height: 1;
+    white-space: nowrap;
+    margin-right: 0.25em; /* Spațiu între badge-uri */
+    margin-bottom: 0.25em; /* Spațiu sub badge-uri */
+}
+
+/* Base Colors for Shopify-like badges */
+.status-badge.default {
+    background-color: var(--pico-color-gray-200);
+    color: var(--pico-color-gray-800);
+}
+.status-badge.info { /* For Payment pending, Unfulfilled */
+    background-color: #f7e090; /* Shopify yellow-ish */
+    color: #4c3c0b;
+}
+.status-badge.success { /* For Paid, Fulfilled, Delivered */
+    background-color: #a4e1ae; /* Shopify green-ish */
+    color: #174d1a;
+}
+.status-badge.warning { /* For On Hold, Delivery Issues */
+    background-color: #f7d290; /* Shopify orange-ish */
+    color: #4d3a0b;
+}
+.status-badge.danger { /* For Refused, Canceled */
+    background-color: #f0a8a8; /* Shopify red-ish */
+    color: #571a1a;
+}
+.status-badge.primary { /* For In Transit, Processed, New Order */
+    background-color: #b3d9ff; /* Shopify blue-ish */
+    color: #14496b;
+}
+
+/* Icon (optional, if you decide to add them back for some statuses) */
+.status-badge .icon {
+    margin-right: 0.4em;
+    font-size: 1.1em;
+}
+
+
+/* --- Specific Courier Status Badges (if different colors needed) --- */
+/* You can define more specific styles here if a courier status needs a unique color */
+.status-badge.processed { background-color: #b3d9ff; color: #14496b; } /* Blue-ish */
+.status-badge.in_transit { background-color: #b3d9ff; color: #14496b; }
+.status-badge.pickup_office { background-color: #b3d9ff; color: #14496b; }
+.status-badge.delivered { background-color: #a4e1ae; color: #174d1a; } /* Green-ish */
+.status-badge.refused { background-color: #f0a8a8; color: #571a1a; } /* Red-ish */
+.status-badge.canceled { background-color: #f0a8a8; color: #571a1a; }
+.status-badge.delivery_issues { background-color: #f7d290; color: #4d3a0b; } /* Orange-ish */
+.status-badge.new_order { background-color: #b3d9ff; color: #14496b; }
+.status-badge.unfulfilled { background-color: #f7e090; color: #4c3c0b; }
+.status-badge.on_hold { background-color: #f7d290; color: #4d3a0b; }
+.status-badge.not_left_alert { background-color: #f0a8a8; color: #571a1a; }
+
+
+/* --- Order Notes Styling --- */
+.order-notes-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.order-notes-icon {
+    cursor: pointer;
+    color: var(--pico-color-gray-600);
+    margin-left: 0.3em;
+    vertical-align: middle;
+}
+
+.order-notes-icon:hover {
+    color: var(--pico-color-primary-600);
+}
+
+.order-notes-tooltip {
+    visibility: hidden;
+    width: 300px;
+    background-color: var(--pico-color-dark);
+    color: var(--pico-color-light);
+    text-align: left;
+    border-radius: var(--pico-border-radius);
+    padding: 0.8em 1em;
+    position: absolute;
+    z-index: 20; /* Mai sus decât alte elemente */
+    bottom: 125%; /* Deasupra iconiței */
+    left: 50%;
+    margin-left: -150px; /* Centrează tooltip-ul */
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: var(--pico-box-shadow);
+}
+
+.order-notes-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--pico-color-dark) transparent transparent transparent;
+}
+
+.order-notes-wrapper:hover .order-notes-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ... (alte stiluri, dacă există, rămân neschimbate) ... */
+
+
+/* static/css/style.css */
+
+:root {
+    --pico-font-size: 14px; /* Font mai mic pentru un look mai compact */
+    --pico-card-background-color: #ffffff;
+    --pico-card-border-color: #e1e4e8;
+    --pico-primary: #007bff; /* Un albastru mai standard */
+}
+
+body { 
+    padding: 0; 
+    color: #24292e; 
+    background-color: #f6f8fa; /* Un fundal ușor gri ca în Shopify */
+}
+
+main.container { 
+    max-width: 1800px; 
+    padding: 2rem; 
+}
+
+/* Stil general pentru tabele */
+.main-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    background-color: var(--pico-card-background-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.main-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em; /* Font mai mic, mai compact */
+}
+
+.main-table th, 
+.main-table td {
+    padding: 0.75rem 1rem; /* Padding ajustat pentru compactitate */
+    border-bottom: 1px solid var(--pico-card-border-color);
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.main-table tbody tr:last-child td {
+    border-bottom: none; /* Fără bordură la ultimul rând */
+}
+
+.main-table th {
+    background-color: #f6f8fa;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-weight: 600;
+    color: #586069;
+}
+
+/* **CORECTIE HOVER**: Asigură-te că stilul de hover este vizibil */
+.main-table tbody tr:hover {
+    background-color: #f1f8ff !important; /* Un albastru deschis, `!important` pentru a suprascrie alte reguli */
+}
+
+
+/* static/css/style.css */
+/* ... (păstrează celelalte stiluri, înlocuiește doar ce e legat de status-badge) ... */
+
+/* Stil pentru statusuri */
+.status-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.9em;
+    line-height: 1.2;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+/* **CORECTIE DEFINITIVĂ**: Forțăm aplicarea culorilor cu !important */
+td .status-badge.status-livrata           { background-color: #d2f5d4 !important; color: #008007 !important; border-color: #b3d9b4 !important; }
+td .status-badge.status-comandă-nouă      { background-color: #fff4d8 !important; color: #664600 !important; border-color: #ffe08a !important; }
+td .status-badge.status-neprocesată       { background-color: #ffead0 !important; color: #8c5a1a !important; border-color: #ffd8a8 !important; }
+td .status-badge.status-on-hold           { background-color: #fce8e8 !important; color: #6d1111 !important; border-color: #f1b0b0 !important; }
+td .status-badge.status-procesată         { background-color: #e6e6e6 !important; color: #333333 !important; border-color: #c4c4c4 !important; }
+td .status-badge.status-în-tranzit        { background-color: #ddebf7 !important; color: #004085 !important; border-color: #afcce6 !important; }
+td .status-badge.status-refuzată          { background-color: #fce8e8 !important; color: #6d1111 !important; border-color: #f1b0b0 !important; }
+td .status-badge.status-anulată-shopify   { background-color: #e6e6e6 !important; color: #333333 !important; border-color: #c4c4c4 !important; }
+
+
+/* Stilizare pentru dropdown AWB-uri */
+.awb-dropdown {
+    position: relative;
+    display: inline-block;
+}
+.awb-dropdown summary {
+    list-style: none; /* Elimină săgeata default */
+    cursor: pointer;
+    font-weight: bold;
+}
+.awb-dropdown summary::after {
+    content: ' ▼'; /* Adaugă o săgeată custom */
+    font-size: 0.7em;
+    display: inline-block;
+    margin-left: 4px;
+}
+.awb-dropdown[open] summary::after {
+    content: ' ▲';
+}
+.awb-dropdown ul {
+    position: absolute;
+    background-color: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    box-shadow: var(--pico-card-box-shadow);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    list-style-type: none;
+    z-index: 100;
+    width: 250px; /* Lățime fixă pentru dropdown */
+}
+.awb-dropdown ul li {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--pico-card-border-color);
+}
+.awb-dropdown ul li:last-child {
+    border-bottom: none;
+}
+
+
+.order-notes-tooltip {
+    visibility: hidden;
+    width: 300px;
+    background-color: var(--pico-card-background-color); /* Fundal alb */
+    color: var(--pico-color); /* Text normal */
+    text-align: left;
+    border-radius: var(--pico-border-radius);
+    padding: 0.8em 1em;
+    position: absolute;
+    z-index: 20;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -150px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: 1px solid var(--pico-card-border-color); /* Adăugăm o bordură */
+    box-shadow: var(--pico-box-shadow);
+}
+
+.order-notes-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    /* Săgeata va fi albă cu o bordură fină */
+    border-color: var(--pico-card-background-color) transparent transparent transparent;
+}
+
+/* static/css/style.css */
+
+.order-row-main {
+    cursor: pointer;
+}
+
+.order-row-main:hover {
+    background-color: #f5f5f5; /* Sau o altă culoare la alegere */
+}
+
+.order-row-details td {
+    border-top: none !important;
+}
+
+/* static/css/style.css */
+
+/* Starea implicită (COMPACTĂ) */
+.detailed-view {
+    display: none;
+}
+.compact-view {
+    display: block;
+}
+
+/* Stiluri pentru vederea COMPACTĂ - trunchiere text */
+.compact-view small {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 250px; /* Ajustează după preferințe */
+}
+
+/* Starea activă (DETALIATĂ) */
+.detailed-view-active .compact-view {
+    display: none;
+}
+.detailed-view-active .detailed-view {
+    display: block;
+}
+
+/* Aliniere verticală mai bună în vederea detaliată */
+.detailed-view-active tr {
+    vertical-align: top;
+}
+
+/* Aici poți adăuga alte stiluri de care ai nevoie */
+
+
+/* static/css/style.css */
+
+/* Starea implicită (COMPACTĂ) */
+/* Ascundem vederea detaliată în mod implicit */
+.table tbody tr td .detailed-view {
+    display: none;
+}
+.table tbody tr td .compact-view {
+    display: block;
+}
+
+/* Stiluri pentru trunchierea textului în vederea compactă */
+.compact-view {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px; /* Poți ajusta această lățime */
+}
+
+/* Când TBODY are clasa .detailed-view-active (starea DETALIATĂ) */
+/* Ascundem vederea compactă */
+.table tbody.detailed-view-active tr td .compact-view {
+    display: none;
+}
+/* Și o afișăm pe cea detaliată */
+.table tbody.detailed-view-active tr td .detailed-view {
+    display: block;
+}
+
+/* Îmbunătățiri vizuale pentru vederea detaliată */
+.table tbody.detailed-view-active tr {
+    vertical-align: top;
+}
+.detailed-view hr {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+/* static/css/style.css */
+
+/* --- LĂȚIMEA COLOANELOR --- */
+/* Forțează tabelul să respecte lățimile definite */
+.main-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse; /* Asigură un aspect mai curat */
+}
+
+/* Lățimi specifice pentru fiecare coloană, ajustate pentru conținut */
+.main-table th[data-column-key="selector"],
+.main-table td[data-column-key="selector"] { width: 3%; }
+
+.main-table th[data-column-key="comanda"],
+.main-table td[data-column-key="comanda"] { width: 14%; }
+
+.main-table th[data-column-key="data"],
+.main-table td[data-column-key="data"] { width: 9%; }
+
+.main-table th[data-column-key="status"],
+.main-table td[data-column-key="status"] { width: 9%; }
+
+.main-table th[data-column-key="payment_status"],
+.main-table td[data-column-key="payment_status"] { width: 9%; }
+
+.main-table th[data-column-key="fulfillment_status"],
+.main-table td[data-column-key="fulfillment_status"] { width: 9%; }
+
+.main-table th[data-column-key="produse"],
+.main-table td[data-column-key="produse"] { width: 18%; } /* Mai mult spațiu pentru produse */
+
+.main-table th[data-column-key="awb"],
+.main-table td[data-column-key="awb"] { width: 10%; }
+
+.main-table th[data-column-key="status_curier"],
+.main-table td[data-column-key="status_curier"] { width: 9%; }
+
+.main-table th[data-column-key="printat"],
+.main-table td[data-column-key="printat"] { width: 5%; text-align: center; }
+
+.main-table th[data-column-key="printat_la"],
+.main-table td[data-column-key="printat_la"] { width: 9%; }
+
+.main-table th[data-column-key="actiuni"],
+.main-table td[data-column-key="actiuni"] { width: 5%; text-align: center; }
+
+
+/* --- STILURI PENTRU VEDEREA DETALIATĂ --- */
+
+/* Starea implicită (COMPACTĂ) */
+.detailed-view { display: none; }
+.compact-view { display: block; }
+.compact-view, .compact-view small {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Starea activă (DETALIATĂ) - Când TBODY are clasa .detailed-view-active */
+.detailed-view-active .compact-view { display: none; }
+.detailed-view-active .detailed-view { display: block; }
+.detailed-view-active tr { vertical-align: top; }
+.detailed-view hr {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+/* static/css/style.css */
+
+/* --- LĂȚIMEA COLOANELOR --- */
+.main-table {
+    table-layout: fixed; /* Forțează tabelul să respecte lățimile definite */
+    width: 100%;
+    border-collapse: collapse;
+    word-wrap: break-word; /* REGULA CHEIE: Forțează textul lung să treacă pe rândul următor */
+}
+
+/* Lățimi specifice pentru fiecare coloană */
+.main-table th[data-column-key="selector"],
+.main-table td[data-column-key="selector"] { width: 3%; }
+
+.main-table th[data-column-key="comanda"],
+.main-table td[data-column-key="comanda"] { width: 14%; }
+
+.main-table th[data-column-key="data"],
+.main-table td[data-column-key="data"] { width: 9%; }
+
+.main-table th[data-column-key="status"],
+.main-table td[data-column-key="status"] { width: 9%; }
+
+.main-table th[data-column-key="payment_status"],
+.main-table td[data-column-key="payment_status"] { width: 9%; }
+
+.main-table th[data-column-key="fulfillment_status"],
+.main-table td[data-column-key="fulfillment_status"] { width: 9%; }
+
+.main-table th[data-column-key="produse"],
+.main-table td[data-column-key="produse"] { width: 18%; }
+
+.main-table th[data-column-key="awb"],
+.main-table td[data-column-key="awb"] { width: 10%; }
+
+.main-table th[data-column-key="status_curier"],
+.main-table td[data-column-key="status_curier"] { width: 9%; }
+
+.main-table th[data-column-key="printat"],
+.main-table td[data-column-key="printat"] { width: 5%; text-align: center; }
+
+.main-table th[data-column-key="printat_la"],
+.main-table td[data-column-key="printat_la"] { width: 9%; }
+
+.main-table th[data-column-key="actiuni"],
+.main-table td[data-column-key="actiuni"] { width: 5%; text-align: center; }
+
+
+/* --- STILURI PENTRU VEDEREA DETALIATĂ --- */
+
+/* Starea implicită (COMPACTĂ) */
+.detailed-view {
+    display: none;
+}
+.compact-view {
+    display: block;
+    white-space: nowrap;      /* Nu permite textului să treacă pe rândul următor */
+    overflow: hidden;         /* Ascunde textul care depășește */
+    text-overflow: ellipsis;  /* Adaugă "..." la final */
+}
+
+/* Starea activă (DETALIATĂ) - Când TBODY are clasa .detailed-view-active */
+.detailed-view-active .compact-view {
+    display: none;
+}
+.detailed-view-active .detailed-view {
+    display: block;
+    white-space: normal; /* REGULA CHEIE: Permite textului să treacă pe mai multe rânduri */
+}
+.detailed-view-active tr {
+    vertical-align: top; /* Aliniază conținutul sus pentru lizibilitate */
+}
+.detailed-view hr {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+
+/* --- LĂȚIMEA COLOANELOR --- */
+.main-table { table-layout: fixed; width: 100%; border-collapse: collapse; }
+.main-table th[data-column-key="selector"], .main-table td[data-column-key="selector"] { width: 3%; }
+.main-table th[data-column-key="comanda"], .main-table td[data-column-key="comanda"] { width: 14%; }
+.main-table th[data-column-key="data"], .main-table td[data-column-key="data"] { width: 9%; }
+.main-table th[data-column-key="status"], .main-table td[data-column-key="status"] { width: 9%; }
+.main-table th[data-column-key="payment_status"], .main-table td[data-column-key="payment_status"] { width: 9%; }
+.main-table th[data-column-key="fulfillment_status"], .main-table td[data-column-key="fulfillment_status"] { width: 9%; }
+.main-table th[data-column-key="produse"], .main-table td[data-column-key="produse"] { width: 18%; }
+.main-table th[data-column-key="awb"], .main-table td[data-column-key="awb"] { width: 10%; }
+.main-table th[data-column-key="status_curier"], .main-table td[data-column-key="status_curier"] { width: 9%; }
+.main-table th[data-column-key="printat"], .main-table td[data-column-key="printat"] { width: 5%; text-align: center; }
+.main-table th[data-column-key="printat_la"], .main-table td[data-column-key="printat_la"] { width: 9%; }
+.main-table th[data-column-key="actiuni"], .main-table td[data-column-key="actiuni"] { width: 5%; text-align: center; }
+.main-table td { word-wrap: break-word; }
+.main-table td small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+
+/* --- STILURI PENTRU RÂNDURILE EXPANDABILE --- */
+.order-row-details td { padding: 0 !important; border: none !important; }
+.order-row-details .card {
+    border-radius: 0;
+    border: 1px solid #dee2e6;
+    border-top: 3px solid #0d6efd;
+    margin: 0;
+}
+
+
+/* static/css/style.css */
+
+/* --- LĂȚIMEA COLOANELOR --- */
+.main-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+.main-table td {
+    word-wrap: break-word; /* Previne suprapunerea textului */
+}
+/* Poți ajusta aceste procente după cum dorești */
+.main-table [data-column-key="selector"] { width: 3%; }
+.main-table [data-column-key="comanda"] { width: 14%; }
+.main-table [data-column-key="data"] { width: 9%; }
+.main-table [data-column-key="status"] { width: 9%; }
+.main-table [data-column-key="payment_status"] { width: 9%; }
+.main-table [data-column-key="fulfillment_status"] { width: 9%; }
+.main-table [data-column-key="produse"] { width: 18%; }
+.main-table [data-column-key="awb"] { width: 10%; }
+.main-table [data-column-key="status_curier"] { width: 9%; }
+.main-table [data-column-key="printat"] { width: 5%; text-align: center; }
+.main-table [data-column-key="printat_la"] { width: 9%; }
+.main-table [data-column-key="actiuni"] { width: 5%; text-align: center; }
+.main-table td small {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- STILURI PENTRU RÂNDURILE EXPANDABILE (CORECTATE) --- */
+.order-row-main {
+    cursor: pointer;
+    border-bottom: 1px solid #dee2e6;
+}
+.order-row-main:hover {
+    background-color: #f8f9fa;
+}
+
+/* Stiluri pentru rândul de detalii care conține card-ul */
+.order-row-details > td {
+    padding: 0 !important;
+    border: none !important;
+    /* Linia de separare se va vedea doar când card-ul este vizibil */
+    border-top: 3px solid transparent; 
+}
+
+/* Când rândul de detalii este deschis, colorăm bordura */
+.order-row-details td .collapse.show {
+    border-top: 3px solid #0d6efd;
+}
+
+.order-row-details .card {
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    background-color: #f8f9fa; /* Un fundal puțin diferit pentru a se distinge */
+    padding: 1rem;
+}
+
+
+.order-details-row {
+    display: none;
+}
+
+/* Stil pentru rândul de detalii când este vizibil */
+.order-details-row.visible {
+    display: table-row;
+}
+
+/* Butonul de afisare/ascundere detalii */
+.details-toggle-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.details-toggle-btn:hover {
+    background-color: #0056b3;
+}
+
+.details-toggle-btn.active {
+    background-color: #6c757d;
+}
+
+/* Containerul principal pentru grila de detalii */
+.details-grid {
+    display: grid;
+    /* Creează 3 coloane pe ecrane mari, și devine responsiv pe ecrane mici */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 20px;
+    padding: 20px;
+    background-color: #f4f6f9; /* Un gri mai deschis */
+    border-left: 4px solid #007bff; /* Accent vizual */
+}
+
+/* Blocurile de informatii din grila */
+.info-block {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+}
+
+.info-block h4 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.info-block p {
+    margin: 0 0 8px 0;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.info-block p strong {
+    color: #555;
+}
+
+/* Lista de produse */
+.product-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0 0 15px 0;
+}
+
+.product-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #e9ecef;
+    font-size: 14px;
+}
+.product-list li:last-child {
+    border-bottom: none;
+}
+
+/* Butoanele de actiuni din detalii */
+.details-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.details-actions button {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.details-actions button:hover {
+    background-color: #e9ecef;
+}
+
+/* /static/css/style.css - Adaugă la finalul fișierului */
+
+/* ---------- Stiluri pentru Butoane Actiuni in Tabel ---------- */
+.actions-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: #333;
+}
+
+.action-btn:hover {
+    background-color: #e9ecef;
+    border-color: #bbb;
+}
+
+.details-toggle-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* ---------- Noul Design pentru Vederea Detaliată ---------- */
+
+.order-details-row {
+    display: none;
+}
+.order-details-row.visible {
+    display: table-row;
+}
+.order-details-row td {
+    padding: 0 !important;
+    background: #f0f2f5;
+}
+
+.details-grid-new {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1px;
+    background-color: #dcdfe2;
+    padding: 1px;
+    border-left: 4px solid #007bff;
+}
+
+.info-block-new {
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+.info-block-new h4 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.info-block-new h4 .icon {
+    font-size: 20px;
+}
+.info-block-new hr {
+    border: none;
+    border-top: 1px solid #e9ecef;
+    margin: 15px 0;
+}
+
+.info-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 14px;
+}
+.info-line .label {
+    color: #6c757d;
+    padding-right: 10px;
+}
+.info-line .value {
+    font-weight: 500;
+    text-align: right;
+}
+.info-line .value.total-price {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.product-list-new {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0 0 15px 0;
+    font-size: 14px;
+}
+.product-list-new li {
+    padding: 6px 0;
+    border-bottom: 1px dashed #e9ecef;
+}
+.product-list-new li:last-child { border-bottom: none; }
+
+.details-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.action-button {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    transition: background-color 0.2s;
+}
+.action-button:hover {
+    background-color: #0056b3;
+}
+.action-button.secondary {
+    background-color: #6c757d;
+}
+.action-button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* /static/css/style.css - Adaugă la finalul fișierului */
+
+/* =================================================================== */
+/* NOUL DESIGN "PREMIUM" PENTRU DETAILED VIEW              */
+/* =================================================================== */
+
+/* Containerul principal al rândului de detalii */
+.order-details-row td {
+    padding: 0 !important;
+    background-color: #f0f2f5; /* Un fundal neutru, puțin mai închis */
+    box-shadow: inset 0 5px 8px -5px rgba(0,0,0,0.2), inset 0 -5px 8px -5px rgba(0,0,0,0.2);
+}
+
+/* Grila care aranjează cardurile */
+.details-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 16px; /* Spațiu între carduri */
+    padding: 16px;
+}
+
+/* Stilul de bază pentru fiecare card de informații */
+.details-card {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px; /* Colțuri mai rotunjite */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.details-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(0,0,0,0.07);
+}
+
+/* Antetul fiecărui card */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e9ecef;
+}
+.card-header .icon {
+    font-size: 20px;
+    color: #007bff;
+}
+.card-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600; /* Puțin mai bold */
+    color: #343a40;
+}
+
+/* Corpul fiecărui card */
+.card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Asigură că toate cardurile au aceeași înălțime */
+}
+
+/* Liniile de informații (ex: Nume: John Doe) */
+.info-line-premium {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #f8f9fa; /* Separator foarte subtil */
+}
+.info-line-premium:last-child {
+    border-bottom: none;
+}
+.info-line-premium .label {
+    color: #6c757d; /* Culoare mai ștearsă pentru etichetă */
+}
+.info-line-premium .value {
+    font-weight: 500;
+    color: #212529; /* Culoare mai închisă pentru valoare */
+    text-align: right;
+    white-space: pre-wrap; /* Permite împărțirea pe mai multe rânduri a notițelor */
+    word-break: break-word;
+}
+
+/* Lista de produse și istoric */
+.item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+.item-list li {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e9ecef;
+}
+.item-list li:last-child {
+    border-bottom: none;
+}
+.item-list .item-title {
+    font-weight: 500;
+}
+.item-list .item-details {
+    font-size: 12px;
+    color: #6c757d;
+}
+.item-list a {
+    font-weight: 600;
+}
+
+/* Butoanele de acțiuni din card */
+.card-actions {
+    margin-top: auto; /* Împinge butoanele la baza cardului */
+    padding-top: 16px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    gap: 10px;
+}

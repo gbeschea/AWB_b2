@@ -1,0 +1,88 @@
+{% extends "_layout.html" %}
+{% block title %}Validare Adrese - AWB Hub{% endblock %}
+
+{% block content %}
+    <h1>📝 Validation Hub</h1>
+    <p>Aici se găsesc comenzile care necesită validare manuală a adresei.</p>
+
+    <article style="margin-bottom: 2rem; padding: 1rem;">
+        <button id="revalidate-btn" class="secondary">🔄 Re-validează Toate Comenzile Invalide</button>
+        <small>Folosește acest buton după ce ai modificat logica de validare pentru a vedea instant rezultatele.</small>
+    </article>
+    
+    <div class="main-table-wrapper">
+        <table class="main-table striped">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Comanda</th>
+                    <th style="width: 20%;">Client / Telefon</th>
+                    <th style="width: 35%;">Adresă Primită</th>
+                    <th style="width: 25%;">Motiv Invalidare și Scor</th>
+                    <th style="width: 10%;">Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr data-order-id="{{ order.id }}">
+                    <td>
+                        <strong>{{ order.name }}</strong><br>
+                        <small>{{ order.store.name if order.store }}</small>
+                    </td>
+                    <td>
+                        {{ order.shipping_name or 'N/A' }}<br>
+                        <small>{{ order.shipping_phone or 'N/A' }}</small>
+                    </td>
+                    <td>
+                        <div class="address-fields">
+                            <p>
+                                <strong>Jud.:</strong> 
+                                <span class="editable" data-field="shipping_province">{{ order.shipping_province }}</span>
+                            </p>
+                            <p>
+                                <strong>Loc.:</strong> 
+                                <span class="editable" data-field="shipping_city">{{ order.shipping_city }}</span>
+                            </p>
+                            <p>
+                                <strong>Str.:</strong> 
+                                <span class="editable" data-field="shipping_address1">{{ order.shipping_address1 }}</span>
+                                <span class="editable" data-field="shipping_address2">{{ order.shipping_address2 }}</span>
+                            </p>
+                            <p>
+                                <strong>ZIP:</strong> 
+                                <span class="editable" data-field="shipping_zip">{{ order.shipping_zip }}</span>
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        {# === AICI ESTE CORECȚIA === #}
+                        {# 1. Iterăm printr-o listă simplă, nu un dicționar. #}
+                        {% if order.address_validation_errors %}
+                            <ul>
+                            {% for error_message in order.address_validation_errors %}
+                                <li><small>{{ error_message }}</small></li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <small><em>Niciun motiv specificat.</em></small>
+                        {% endif %}
+                        
+                        {# 2. Afișăm scorul separat, pentru a fi vizibil mereu. #}
+                        <hr style="margin: 0.5rem 0;">
+                        <small><strong>Scor:</strong> {{ order.address_score if order.address_score is not none else 'N/A' }}</small>
+                    </td>
+                    <td>
+                        <button class="secondary outline mark-valid-btn">Valid</button>
+                        <button class="contrast outline hold-btn">Hold</button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" style="text-align: center; padding: 3rem;">Nicio comandă de validat!</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/validation.js') }}"></script>
+{% endblock %}

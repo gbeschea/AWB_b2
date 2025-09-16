@@ -1,0 +1,12 @@
+<nav class="container-fluid">
+    <ul>
+        <li><a href="{{ url_for('view_orders') }}"><strong>AWB Hub</strong></a></li>
+    </ul>
+    <ul>
+        <li><a href="{{ url_for('view_orders') }}">Comenzi</a></li>
+        <li><a href="{{ url_for('get_print_view_page') }}">Print Hub</a></li>
+        <li><a href="{{ url_for('get_validation_page') }}">Validation Hub</a></li>
+        <li><a href="{{ url_for('get_print_logs_page') }}">Istoric Printări</a></li>
+        <li><a href="{{ url_for('get_settings_page') }}" role="button" class="secondary outline">Setări</a></li>
+    </ul>
+</nav>

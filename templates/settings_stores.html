@@ -1,0 +1,113 @@
+{% extends "_layout.html" %}
+{% block title %}Setări Magazine - AWB Hub{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ul>
+            <li><a href="{{ url_for('get_settings_page') }}">Setări</a></li>
+            <li>Magazine</li>
+        </ul>
+    </nav>
+    <h1 style="margin-bottom: 1rem;">🏬 Setări Magazine</h1>
+    <p>Adaugă, editează sau dezactivează magazinele Shopify conectate.</p>
+
+    <hr>
+
+    <article>
+        <hgroup>
+            <h2>Adaugă un magazin nou</h2>
+            <p>Completează detaliile de mai jos pentru a conecta un nou magazin.</p>
+        </hgroup>
+        <form action="{{ url_for('create_store') }}" method="post">
+            <div class="grid">
+                <label for="name">
+                    Nume Magazin
+                    <input type="text" id="name" name="name" placeholder="ex: Magazinul Meu" required>
+                </label>
+                <label for="domain">
+                    Domeniu Shopify
+                    <input type="text" id="domain" name="domain" placeholder="ex: magazinul-meu.myshopify.com" required>
+                </label>
+            </div>
+            <label for="shared_secret">Token webhooks</label>
+            <input type="password" id="shared_secret" name="shared_secret" required>
+
+            <label for="access_token">Parola API Admin (Acces Token)</label>
+            <input type="password" id="access_token" name="access_token" required>
+            
+            <button type="submit">Adaugă Magazin</button>
+        </form>
+    </article>
+
+    <hr>
+
+    <h2>Magazine existente</h2>
+    {% if stores %}
+        {% for store in stores %}
+        <details>
+            <summary>
+                <strong>{{ store.name }}</strong> - 
+                <small>
+                    <code>{{ store.domain }}</code> - 
+                    <span style="color: {{ 'green' if store.is_active else 'red' }};">
+                        {{ 'Activ' if store.is_active else 'Inactiv' }}
+                    </span>
+                </small>
+            </summary>
+            <div class="grid">
+                <form action="{{ url_for('update_store', store_id=store.id) }}" method="post" id="store-form-{{ store.id }}" class="space-y-4">
+                    <input type="hidden" name="store_id" value="{{ store.id }}">
+                    <label for="name-{{ store.id }}">Nume</label>
+                    <input type="text" id="name-{{ store.id }}" name="name" value="{{ store.name }}" required>
+
+                    <label for="domain-{{ store.id }}">Domeniu</label>
+                    <input type="text" id="domain-{{ store.id }}" name="domain" value="{{ store.domain }}" required>
+
+                    <label for="shared_secret-{{ store.id }}">Shared Secret (lasă gol pentru a nu schimba)</label>
+                    <input type="password" id="shared_secret-{{ store.id }}" name="shared_secret" value="{{ store.shared_secret }}">
+
+                    <label for="access_token-{{ store.id }}">Access Token (lasă gol pentru a nu schimba)</label>
+                    <input type="password" id="access_token-{{ store.id }}" name="access_token" value="{{ store.access_token }}">
+                    <label for="paper_size-{{ store.id }}">
+    Format Hârtie Implicit
+    <select id="paper_size-{{ store.id }}" name="paper_size" required>
+        <option value="A4" {% if store.paper_size == 'A4' %}selected{% endif %}>A4</option>
+        <option value="A6" {% if store.paper_size == 'A6' %}selected{% endif %}>A6</option>
+    </select>
+</label>
+<label for="dpd_client_id-{{ store.id }}">
+    DPD Client ID
+    <input type="text" id="dpd_client_id-{{ store.id }}" name="dpd_client_id" value="{{ store.dpd_client_id or '' }}" placeholder="Client ID specific DPD">
+</label>
+
+
+                    <div class="grid">
+                        <label for="is_active-{{ store.id }}">
+                            Status
+                            <select id="is_active-{{ store.id }}" name="is_active" required>
+                                <option value="true" {% if store.is_active %}selected{% endif %}>Activ</option>
+                                <option value="false" {% if not store.is_active %}selected{% endif %}>Inactiv</option>
+                            </select>
+                        </label>
+                        <label for="pii_source-{{ store.id }}">
+                            Sursă PII
+                            <select id="pii_source-{{ store.id }}" name="pii_source" required>
+                                {% for option in pii_source_options %}
+                                <option value="{{ option }}" {% if store.pii_source == option %}selected{% endif %}>
+                                    {{ option.capitalize() }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                    </div>
+                    <button type="submit">Actualizează</button>
+                </form>
+            </div>
+        </details>
+        {% endfor %}
+    {% else %}
+        <p>Nu există magazine configurate.</p>
+    {% endif %}
+</div>
+{% endblock %}

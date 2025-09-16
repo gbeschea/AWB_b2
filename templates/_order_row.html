@@ -1,0 +1,112 @@
+{# /templates/_order_row.html #}
+
+{% set latest_shipment = order.latest_shipment %}
+{% set awb = latest_shipment.awb if latest_shipment else '' %}
+{% set status_text = order.derived_status or 'N/A' %}
+
+{# =================================================================== #}
+{#                       RÂNDUL PRINCIPAL (Neschimbat)                 #}
+{# =================================================================== #}
+<tr class="order-row-main" data-order-id="{{ order.id }}">
+    <td data-column-key="selector"><input type="checkbox" class="awb-checkbox" value="{{ awb }}" {% if not awb %}disabled{% endif %}></td>
+    <td data-column-key="comanda">
+        <a href="https://{{ order.store.domain if order.store }}/admin/orders/{{ order.shopify_id }}" target="_blank" title="Vezi în Shopify">{{ order.name }}</a><br>
+        <small>{{ order.store.name if order.store else 'N/A' }}</small>
+    </td>
+    <td data-column-key="data"><small>{{ (order.created_at | localtime).strftime('%d-%m-%y %H:%M') if order.created_at }}</small></td>
+    <td data-column-key="status"><span class="status-badge status-{{ status_text | slugify }}">{{ status_text }}</span></td>
+    <td data-column-key="payment_status"><small class="status-badge status-{{ order.financial_status | replace('_', '-') }}">{{ order.financial_status | replace('_', ' ') | capitalize }}</small></td>
+    <td data-column-key="fulfillment_status"><small class="status-badge status-{{ order.shopify_status | replace('_', '-') }}">{{ order.shopify_status | replace('_', ' ') | capitalize }}</small></td>
+    <td data-column-key="produse">
+        <small>
+            {% if order.line_items %}{{ order.line_items[0].quantity }}x {{ order.line_items[0].title | truncate(30) }}{% if order.line_items|length > 1 %} (+{{ order.line_items|length - 1 }}){% endif %}{% else %}-{% endif %}
+        </small>
+    </td>
+    <td data-column-key="awb"><small>{{ awb }}</small></td>
+    <td data-column-key="status_curier"><small>{{ order.mapped_courier_status or '' }}</small></td>
+    <td data-column-key="printat"><small>{{ 'Da' if (latest_shipment and latest_shipment.printed_at) else 'Nu' }}</small></td>
+    <td data-column-key="printat_la"><small>{{ (latest_shipment.printed_at | localtime).strftime('%d-%m-%y %H:%M') if latest_shipment and latest_shipment.printed_at }}</small></td>
+    <td data-column-key="actiuni">
+        <div class="actions-container">
+            {% if awb %}
+                <a href="{{ url_for('download_single_label', awb=awb) }}" target="_blank" class="action-btn download-awb-btn" title="Descarcă AWB">⬇️</a>
+            {% else %}
+                <span class="action-btn download-awb-btn" style="pointer-events: none; opacity: 0.5;" title="AWB negenerat">⬇️</span>
+            {% endif %}
+            <button class="action-btn details-toggle-btn" data-target-id="{{ order.id }}" title="Vezi detalii">👁️</button>
+        </div>
+    </td>
+</tr>
+
+{# =================================================================== #}
+{#        RÂNDUL DE DETALII - CU NOUL DESIGN "PREMIUM"                 #}
+{# =================================================================== #}
+<tr class="order-details-row" id="details-{{ order.id }}">
+    <td colspan="12">
+        <div class="details-grid-premium">
+            
+            <div class="details-card">
+                <div class="card-header">
+                    <span class="icon">👤</span>
+                    <h4>Client și Livrare</h4>
+                </div>
+                <div class="card-body">
+                    <div class="info-line-premium"><span class="label">Nume</span> <span class="value">{{ order.shipping_name or 'N/A' }}</span></div>
+                    <div class="info-line-premium"><span class="label">Adresă</span> <span class="value">{{ order.shipping_address1 or '' }} {{ order.shipping_address2 or '' }}, {{ order.shipping_city or '' }}</span></div>
+                    <div class="info-line-premium"><span class="label">Telefon</span> <span class="value">{{ order.shipping_phone or 'N/A' }}</span></div>
+                    <div class="info-line-premium"><span class="label">Note Client</span> <span class="value">{{ order.note or 'Fără note' }}</span></div>
+                </div>
+            </div>
+
+            <div class="details-card">
+                <div class="card-header">
+                    <span class="icon">📦</span>
+                    <h4>Produse ({{ order.line_items|length }})</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="item-list">
+                        {% for item in order.line_items %}
+                            <li>
+                                <span class="item-title"><strong>{{ item.quantity }}x</strong> {{ item.title }}</span>
+                                <span class="item-details">SKU: {{ item.sku or 'N/A' }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="details-card">
+                <div class="card-header">
+                    <span class="icon">🚚</span>
+                    <h4>Istoric Livrări ({{ order.shipments|length }})</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="item-list">
+                        {% for shipment in order.shipments|sort(attribute='fulfillment_created_at', reverse=True) %}
+                            <li>
+                                {% set template = courier_tracking_map.get(shipment.courier) %}
+                                <span class="item-title">
+                                    {% if shipment.awb and template %}
+                                        <a href="{{ template.replace('{awb}', shipment.awb) }}" target="_blank">{{ shipment.awb }}</a>
+                                    {% else %}
+                                        {{ shipment.awb or 'N/A' }}
+                                    {% endif %}
+                                </span>
+                                <span class="item-details">
+                                    {{ shipment.courier or 'N/A' }} | Status: <em>{{ shipment.last_status or 'N/A' }}</em>
+                                </span>
+                            </li>
+                        {% else %}
+                            <li><span class="item-details">Nicio livrare înregistrată.</span></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="card-actions">
+                         <button class="action-button">Generează AWB</button>
+                         <button class="action-button secondary">Printează</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </td>
+</tr>

@@ -1,0 +1,15 @@
+# requirements.txt
+fastapi
+uvicorn[standard]
+sqlalchemy
+asyncpg
+httpx
+jinja2
+pypdf
+reportlab
+tqdm
+python-multipart
+pydantic
+pydantic-settings
+async-lru
+PyPDF2

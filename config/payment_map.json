@@ -1,0 +1,18 @@
+{
+  "Card": [
+    "stripe",
+    "visa",
+    "mastercard",
+    "maestro",
+    "mobilpay",
+    "netopia"
+  ],
+  "Transfer Bancar": [
+    "bank deposit",
+    "bank_transfer"
+  ],
+  "Ramburs": [
+    "cash on delivery",
+    "ramburs"
+  ]
+}

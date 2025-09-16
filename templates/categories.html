@@ -1,0 +1,64 @@
+{% extends "_layout.html" %}
+{% block title %}Categorii Magazine - AWB Hub{% endblock %}
+
+{% block content %}
+    <h1>Gestionează Categoriile de Magazine</h1>
+    
+    <div class="grid">
+        <article>
+            <hgroup>
+                <h2>Adaugă Categorie Nouă</h2>
+                <p>Creează o nouă categorie pentru a grupa magazinele.</p>
+            </hgroup>
+            <form action="{{ url_for('create_category') }}" method="post" class="grid">
+                <input type="text" id="name" name="name" placeholder="Nume Categorie" required>
+                <button type="submit">Adaugă</button>
+            </form>
+        </article>
+        
+        <article style="grid-column: span 2;">
+            <form action="{{ url_for('assign_stores_to_categories') }}" method="post">
+                <hgroup>
+                    <h2>Asignează Magazine la Categorii</h2>
+                    <p>Bifează magazinele corespunzătoare pentru fiecare categorie.</p>
+                </hgroup>
+                <div class="main-table-wrapper">
+                    <table class="settings-table">
+                        <thead>
+                            <tr>
+                                <th>Nume Categorie</th>
+                                <th>Magazine Asignate</th>
+                                <th style="width: 10%; text-align: right;">Acțiuni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            <tr>
+                                <td><strong>{{ category.name }}</strong></td>
+                                <td>
+                                    <fieldset>
+                                        <div class="grid">
+                                            {% for store in stores %}
+                                            <div>
+                                                <label for="store_{{ category.id }}_{{ store.id }}">
+                                                    <input type="checkbox" id="store_{{ category.id }}_{{ store.id }}" name="stores_{{ category.id }}" value="{{ store.id }}" {% if store in category.stores %}checked{% endif %}>
+                                                    {{ store.name }}
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </fieldset>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button type="submit" class="secondary outline" formaction="{{ url_for('delete_category', category_id=category.id) }}" onclick="return confirm('Ești sigur?');">Șterge</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if categories %}<button type="submit" style="margin-top: 2rem;">Salvează Toate Asignările</button>{% endif %}
+            </form>
+        </article>
+    </div>
+{% endblock %}

@@ -1,0 +1,281 @@
+{% extends "_layout.html" %}
+{% block title %}Comenzi - AWB Hub{% endblock %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="margin: 0;">Comenzi</h1>
+        <div>
+            <progress id="syncProgressBar" style="display: none; width: 250px; margin-bottom: 0;"></progress>
+            <small id="syncProgressText" style="font-style: italic; color: var(--pico-color-gray-500);"></small>
+        </div>
+    </div>
+    
+    <article style="padding: 1.5rem;">
+        <div class="grid-sync"> <div class="sync-group">
+                <form id="days-form" style="display: none;"><input type="number" name="days" value="{{ request.query_params.get('days', 30) }}"></form>
+                <label for="days-input">Interval Sync (zile)</label>
+                <input id="days-input" type="number" form="days-form" name="days" value="{{ request.query_params.get('days', 30) }}" min="1" max="180"/>
+            </div>
+            <div class="sync-group">
+                <label>Sincronizare Standard</label>
+                <div class="grid">
+                    <button id="syncOrdersButton" type="button" class="outline">Comenzi</button>
+                    <button id="syncCouriersButton" type="button" class="outline">Curieri</button>
+                </div>
+            </div>
+            
+            <div class="sync-group sync-full-group">
+                <label>Sincronizare Totală</label>
+                <div class="store-selector">
+                    {% for store in all_stores %}
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                class="store-checkbox" 
+                                value="{{ store.id }}">
+                            {{ store.name }}
+                        </label>
+                    {% else %}
+                        <small>Niciun magazin configurat.</small>
+                    {% endfor %}
+                </div>
+                <button id="fullSyncButton" type="button" class="contrast outline" style="width: 100%;">Rulează</button>
+            </div>
+        </div>
+    </article>
+    <details class="card" id="filter-details">
+        <summary><div class="summary-content"><span class="chevron">▶</span> Filtrează Comenzile</div></summary>
+        <div class="details-content">
+            <form id="filterForm" method="get" action="{{ url_for('view_orders') }}">
+                 <div class="grid">
+                    <div>
+                        <label for="store">Magazin (Filtru Vizualizare)</label>
+                        <select id="store" name="store">
+                            <option value="all">Toate Magazinele ({{ filter_counts.get('store', {}).get('all', 0) }})</option>
+                            {% for s in stores %}
+                            <option value="{{ s.domain }}" {% if request.query_params.get('store') == s.domain %}selected{% endif %}>
+                                {{ s.name }} ({{ filter_counts.get('store', {}).get(s.domain, 0) }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="category">Categorie Magazine</label>
+                        <select id="category" name="category">
+                            <option value="all">Toate Categoriile ({{ filter_counts.get('category', {}).get('all', 0) }})</option>
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if request.query_params.get('category') == cat.id|string %}selected{% endif %}>
+                                {{ cat.name }} ({{ filter_counts.get('category', {}).get(cat.id|string, 0) }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="courier">Curier</label>
+                        <select id="courier" name="courier">
+                            <option value="all">Toți Curierii ({{ filter_counts.get('courier', {}).get('all', 0) }})</option>
+                            {% for c in couriers %}
+                            <option value="{{ c }}" {% if request.query_params.get('courier') == c %}selected{% endif %}>
+                                {{ c }} ({{ filter_counts.get('courier', {}).get(c, 0) }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                 </div>
+                 <div class="grid">
+                    <div>
+                        <label for="derived_status">Status AWB Hub</label>
+                        <select id="derived_status" name="derived_status">
+                            <option value="all">Toate ({{ filter_counts.get('derived_status', {}).get('all', 0) }})</option>
+                            {% for status in derived_status_options %}
+                            <option value="{{ status }}" {% if request.query_params.get('derived_status') == status %}selected{% endif %}>
+                                {{ status }} ({{ filter_counts.get('derived_status', {}).get(status, 0) }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="courier_status_group">Status Curier</label>
+                        <select id="courier_status_group" name="courier_status_group">
+                            <option value="all">Toate ({{ filter_counts.get('courier_status_group', {}).get('all', 0) }})</option>
+                             <option value="fara_awb" {% if request.query_params.get('courier_status_group') == 'fara_awb' %}selected{% endif %}>Fără AWB</option>
+                            {% for group, name in courier_status_group_options %}
+                            <option value="{{ group }}" {% if request.query_params.get('courier_status_group') == group %}selected{% endif %}>
+                                {{ name }} ({{ filter_counts.get('courier_status_group', {}).get(group, 0) }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="address_status">Status Adresă</label>
+                        <select name="address_status">
+                            <option value="all">Toate</option>
+                            {% for status in address_status_options %}
+                            <option value="{{ status }}" {% if request.query_params.get('address_status') == status %}selected{% endif %}>{{ status.replace('_', ' ')|capitalize }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                 </div>
+                 <div class="grid">
+                    <div>
+                        <label for="financial_status">Payment Status</label>
+                        <select id="financial_status" name="financial_status">
+                            <option value="all">Toate ({{ filter_counts.get('financial_status', {}).get('all', 0) }})</option>
+                            {% for status in financial_status_options %}
+                            <option value="{{ status }}" {% if request.query_params.get('financial_status') == status %}selected{% endif %}>
+                                {{ status.replace('_', ' ')|capitalize }} ({{ filter_counts.get('financial_status', {}).get(status, 0) }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="fulfillment_status">Fulfillment Status</label>
+                        <select id="fulfillment_status" name="fulfillment_status">
+                            <option value="all">Toate ({{ filter_counts.get('fulfillment_status', {}).get('all', 0) }})</option>
+                            {% for status in fulfillment_status_options %}
+                            <option value="{{ status }}" {% if request.query_params.get('fulfillment_status') == status %}selected{% endif %}>
+                                {{ status.replace('_', ' ')|capitalize }} ({{ filter_counts.get('fulfillment_status', {}).get(status, 0) }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="printed_status">Status Printare</label>
+                        <select id="printed_status" name="printed_status">
+                            <option value="all">Toate ({{ filter_counts.get('printed_status', {}).get('all', 0) }})</option>
+                            <option value="printed" {% if request.query_params.get('printed_status') == 'printed' %}selected{% endif %}>Printat ({{ filter_counts.get('printed_status', {}).get('printed', 0) }})</option>
+                            <option value="neprintat" {% if request.query_params.get('printed_status') == 'neprintat' %}selected{% endif %}>Neprintat ({{ filter_counts.get('printed_status', {}).get('neprintat', 0) }})</option>
+                            <option value="fara_awb" {% if request.query_params.get('printed_status') == 'fara_awb' %}selected{% endif %}>Fără AWB ({{ filter_counts.get('printed_status', {}).get('fara_awb', 0) }})</option>
+                        </select>
+                    </div>
+                 </div>
+                 <div class="grid">
+                    <div style="grid-column: 1 / 4;"><label for="order_q">Căutare</label><input type="text" id="order_q" name="order_q" value="{{ request.query_params.get('order_q', '') }}" placeholder="Comandă, Client, AWB"/></div>
+                    <div style="align-self: flex-end;"><a href="{{ url_for('view_orders') }}" role="button" class="secondary outline">Reset</a></div>
+                </div>
+            </form>
+        </div>
+    </details>
+    
+    <div class="table-controls">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <button type="button" id="print-selected-button">Printează AWB-urile Selectate</button>
+            <button id="toggle-columns-btn" class="secondary outline" data-target="modal-column-manager">Afișează/Ascunde Coloane</button>
+                <button id="toggle-detailed-view" class="btn btn-sm btn-outline-secondary">
+                    Vedere Detaliată
+                </button>
+
+        </div>
+        <small><strong>{{ total_orders }}</strong> comenzi găsite</small>
+    </div>
+    
+    <dialog id="modal-column-manager">
+        <article>
+            <header>
+                <a href="#close" aria-label="Close" class="close" data-target="modal-column-manager" onClick="toggleModal(event)"></a>
+                <h4>Afișează/Ascunde Coloane</h4>
+            </header>
+            <div id="column-toggler" class="column-manager-grid"></div>
+        </article>
+    </dialog>
+
+    <div id="select-all-banner" style="display: none; margin-bottom: 1rem;" data-total-orders="{{ total_orders }}"></div>
+    <input type="hidden" id="select_all_filtered_confirm">
+
+    <div class="main-table-wrapper">
+        <table class="main-table striped">
+            <thead>
+                {% macro sort_link(col, text) %}{% set next_sort = col + '_asc' if request.query_params.get('sort_by') != col + '_asc' else col + '_desc' %}<a href="{{ request.url.remove_query_params(['sort_by', 'page']).include_query_params(sort_by=next_sort) }}">{{ text }}{% if request.query_params.get('sort_by', '').startswith(col) %}<span>{{ '↓' if 'desc' in request.query_params.get('sort_by') else '↑' }}</span>{% endif %}</a>{% endmacro %}
+                <tr>
+                    <th data-column-key="selector" style="width: 40px;"><input type="checkbox" id="selectAllCheckbox"></th>
+                    <th data-column-key="comanda">{{ sort_link('order_name', 'Comanda') }}</th>
+                    <th data-column-key="data">{{ sort_link('created_at', 'Data') }}</th>
+                    <th data-column-key="status">Status AWB Hub</th>
+                    <th data-column-key="payment_status">Payment Status</th>
+                    <th data-column-key="fulfillment_status">Fulfillment Status</th>
+                    <th data-column-key="produse">{{ sort_link('line_items_group', 'Produse') }}</th>
+                    <th data-column-key="awb">{{ sort_link('awb', 'AWB') }}</th>
+                    <th data-column-key="status_curier">{{ sort_link('awb_status', 'Status Curier') }}</th>
+                    <th data-column-key="printat">Printat?</th>
+                    <th data-column-key="printat_la">{{ sort_link('printed_at', 'Printat la') }}</th>
+                    <th data-column-key="actiuni">Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    {% include '_order_row.html' %}
+                {% else %}
+                    <tr><td colspan="12" style="text-align: center; padding: 3rem;">Nicio comandă găsită care să corespundă filtrelor selectate.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <nav>
+            <ul style="margin: 0;">
+                {% if page > 1 %}
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=1) }}" role="button" class="secondary outline">Prima</a></li>
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=page-1) }}" role="button" class="secondary outline">←</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <nav>
+            <ul style="margin: 0;">
+                {% for p in page_numbers %}
+                    {% if p == '...' %}
+                        <li><span style="padding: 0 0.5rem;">...</span></li>
+                    {% elif p == page %}
+                        <li><a href="#" role="button">{{ p }}</a></li>
+                    {% else %}
+                        <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=p) }}" role="button" class="secondary outline">{{ p }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        <nav>
+             <ul style="margin: 0;">
+                {% if page < total_pages %}
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=page+1) }}" role="button" class="secondary outline">→</a></li>
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=total_pages) }}" role="button" class="secondary outline">Ultima</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <form id="goToPageForm" method="get" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+            {% for key, value in request.query_params.items() if key != 'page' %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+            <label for="page-input" style="margin-bottom: 0;">Mergi la</label>
+            <input type="number" id="page-input" name="page" min="1" max="{{ total_pages }}" placeholder="{{ page }} / {{ total_pages }}" style="width: 100px; margin-bottom: 0;">
+        </form>
+    </footer>
+
+    <style>
+        .grid-sync {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 2fr;
+            gap: 1.5rem;
+            align-items: flex-end;
+        }
+        .sync-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .store-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+            padding: 0.75rem;
+            border: 1px solid var(--pico-form-element-border-color);
+            border-radius: var(--pico-border-radius);
+            margin-bottom: 0.5rem;
+        }
+        .store-selector label {
+            margin: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+{% endblock %}

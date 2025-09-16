@@ -1,0 +1,163 @@
+{% extends "_layout.html" %}
+{% block title %}Istoric Printări - AWB Hub{% endblock %}
+
+{% block content %}
+    <h1>Istoric Printări</h1>
+    <div class="main-table-wrapper">
+        <table class="logs-table striped">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Detalii</th>
+                    <th style="width: 15%;">Data și Ora</th>
+                    <th style="width: 20%;">Categorie</th>
+                    <th style="width: 15%;">Nr. AWB-uri</th>
+                    <th>Acțiuni PDF</th>
+                </tr>
+            </thead>
+            {% for log in logs %}
+            <tbody>
+                <tr class="log-summary-row">
+                    <td>
+                        <button class="toggle-details-btn outline">
+                            <span class="arrow">▶</span> Vezi
+                        </button>
+                    </td>
+                    <td>{{ (log.created_at | localtime).strftime('%d-%m-%Y %H:%M') }}</td>
+                    <td>{{ log.category_name }}</td>
+                    <td>{{ log.awb_count }}</td>
+                    <td>{% if log.pdf_path %}<a href="{{ url_for('download_printed_pdf', log_id=log.id) }}" role="button">Descarcă PDF</a>{% endif %}</td>
+                </tr>
+                <tr class="log-details-row" style="display: none;">
+                    <td colspan="5" class="details-panel">
+                        <div class="grid">
+                            <div class="details-section">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <h4>Comenzi</h4>
+                                    <div>
+                                        <button class="button outline secondary print-btn">Print</button>
+                                        <button class="button outline secondary csv-btn">CSV</button>
+                                    </div>
+                                </div>
+                                <div class="details-table-wrapper">
+                                    <table class="details-table striped">
+                                        <thead><tr><th>Comandă</th><th>AWB</th></tr></thead>
+                                        <tbody>
+                                            {% for entry in log.entries %}<tr><td>{{ entry.order_name }}</td><td>{{ entry.awb }}</td></tr>{% else %}<tr><td colspan="2">Nicio comandă.</td></tr>{% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="details-section">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <h4>Sumar Produse</h4>
+                                    <div>
+                                        <button class="button outline secondary print-btn">Print</button>
+                                        <button class="button outline secondary csv-btn">CSV</button>
+                                    </div>
+                                </div>
+                                <div class="details-table-wrapper">
+                                    <table class="details-table striped">
+                                        <thead><tr><th>Cantitate</th><th>SKU</th></tr></thead>
+                                        <tbody>
+                                            {% for item in log.summary_items %}<tr><td>{{ item.total_quantity }}</td><td>{{ item.sku or item.title }}</td></tr>{% else %}<tr><td colspan="2">Niciun produs.</td></tr>{% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            {% else %}
+            <tbody><tr><td colspan="5" style="text-align: center; padding: 3rem;">Niciun log de printare găsit.</td></tr></tbody>
+            {% endfor %}
+        </table>
+    </div>
+    <footer style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <small>Pagina {{ page }} din {{ total_pages }}</small>
+        <nav>
+            <ul>
+                {% if page > 1 %}
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=1) }}" role="button" class="secondary outline">Prima</a></li>
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=page-1) }}" role="button" class="secondary outline">←</a></li>
+                {% endif %}
+            </ul>
+            <ul>
+                {% for p in page_numbers %}
+                    {% if p == '...' %}
+                        <li><span style="padding: 0 0.5rem;">...</span></li>
+                    {% elif p == page %}
+                        <li><a href="#" role="button">{{ p }}</a></li>
+                    {% else %}
+                        <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=p) }}" role="button" class="secondary outline">{{ p }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <ul>
+                {% if page < total_pages %}
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=page+1) }}" role="button" class="secondary outline">→</a></li>
+                <li><a href="{{ request.url.remove_query_params('page').include_query_params(page=total_pages) }}" role="button" class="secondary outline">Ultima</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </footer>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const mainElement = document.querySelector('main.container');
+    
+    mainElement.addEventListener('click', function(event) {
+        const toggleButton = event.target.closest('.toggle-details-btn');
+        if (toggleButton) {
+            const summaryRow = toggleButton.closest('tr');
+            const detailsRow = summaryRow.nextElementSibling;
+            const arrow = toggleButton.querySelector('.arrow');
+
+            if (detailsRow && detailsRow.classList.contains('log-details-row')) {
+                const isVisible = detailsRow.style.display === 'table-row';
+                detailsRow.style.display = isVisible ? 'none' : 'table-row';
+                arrow.classList.toggle('open', !isVisible);
+            }
+        }
+        
+        const csvButton = event.target.closest('.csv-btn');
+        if (csvButton) {
+            const section = csvButton.closest('.details-section');
+            const table = section.querySelector('.details-table');
+            const title = section.querySelector('h4').textContent;
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            table.querySelectorAll('tr').forEach(row => {
+                const cols = row.querySelectorAll('th, td');
+                const rowData = Array.from(cols).map(col => `"${col.innerText.replace(/"/g, '""')}"`).join(',');
+                csvContent += rowData + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `${title.trim().replace(/ /g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        const printButton = event.target.closest('.print-btn');
+        if (printButton) {
+            const section = printButton.closest('.details-section');
+            const tableWrapper = section.querySelector('.details-table-wrapper');
+            const title = section.querySelector('h4').textContent;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`<html><head><title>${title}</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"><style>body{padding:1.5rem; font-size: 14px;} table{width:100%;} @media print { body { -webkit-print-color-adjust: exact; } .no-print { display: none; } }</style></head><body><h2>${title}</h2>${tableWrapper.innerHTML}</body></html>`);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => { 
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+    });
+});
+</script>
+{% endblock %}
